@@ -61,9 +61,11 @@ def search():
 
     tweet_texts = [{'tweet': tweet['text'], 'label': 'neutral'} for tweet in tweets['statuses']]
 
-    r = requests.post('http://text-processing.com/api/sentiment/', data={'text': 'the tweet itself'}) 
-    json_response = r.json
-    label = json_response['label']
+    for tweet in tweet_texts:
+        r = requests.post('http://text-processing.com/api/sentiment/', data={'text': tweet['tweet']}) 
+        json_response = r.json()
+        label = json_response['label']
+        tweet['label'] = label
 
     return render_template('search.html', content=tweet_texts)
 
