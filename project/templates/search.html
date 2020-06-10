@@ -10,9 +10,18 @@
 <body>
     <div class='container'>
         <ul class='list-group' id="tweet">
-         {% for element in content %}
-        <li class='list-group-item list-group-item-danger'> {{ element['tweet'] }}</li>
-        {% endfor %}
+
+            {% set css_class= 'list-group-item-info' %}
+            
+            {% for element in content %}
+                {% if element['label'] == 'neg' %}
+                    {% set css_class = 'list-group-item-danger' %}
+                {% elif element['label'] == 'pos' %}
+                    {% set css_class = 'list-group-item-success' %}
+                {% endif %}
+                
+                <li class='list-group-item {{ css_class }}'> {{ element['tweet'] }}</li>
+            {% endfor %}
         </ul>
     </div>    
    
