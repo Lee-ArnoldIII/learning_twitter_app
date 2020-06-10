@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, request, url_for, g
 from twitter_utils import get_request_token, get_oauth_verifier_url, get_access_token
 from user import User
 from database import Database
+import requests
 
 app = Flask(__name__)
 app.secret_key = '1234'
@@ -58,7 +59,11 @@ def search():
     query = request.args.get('q')
     tweets = g.user.twitter_request(f'https://api.twitter.com/1.1/search/tweets.json?q={query}')
 
-    tweet_texts = [tweet['text'] for tweet in tweets['statuses']]
+    tweet_texts = [{'tweet': tweet['text'], 'label': 'neutral'} for tweet in tweets['statuses']]
+
+    r = requests.post('http://text-processing.com/api/sentiment/', data={'text': 'the tweet itself'}) 
+    json_response = r.json
+    label = json_response['label']
 
     return render_template('search.html', content=tweet_texts)
 
